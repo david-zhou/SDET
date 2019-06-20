@@ -140,6 +140,35 @@ public class CRUDGistUI {
         }
     }
     
+    public boolean editGistByUrl(String url, String newDescription, String newFileName, String newCode) {
+        try {
+            String newUrl = gistBaseURL + "/" + url;
+            driver.get(newUrl);
+            driver.findElement(By.cssSelector(editButton)).click();
+            
+            driver.findElement(By.name(descriptionField)).clear();
+            driver.findElement(By.name(descriptionField)).sendKeys(newDescription);
+            driver.findElement(By.cssSelector(newFileNameField)).clear();
+            driver.findElement(By.cssSelector(newFileNameField)).sendKeys(newFileName);
+
+            driver.switchTo().activeElement().sendKeys(Keys.TAB);
+            driver.switchTo().activeElement().sendKeys(Keys.TAB);
+            driver.switchTo().activeElement().sendKeys(Keys.TAB);
+            driver.switchTo().activeElement().sendKeys(Keys.TAB);
+
+            driver.switchTo().activeElement().clear();
+            driver.switchTo().activeElement().sendKeys(newCode);
+            
+            
+            driver.findElement(By.cssSelector(updateButton)).click();
+            
+            return true;
+        } catch (NoSuchElementException ex) {
+            System.out.println("No such gist name");
+            return false;
+        }
+    }
+    
     public boolean deleteGistByName(String filename) {
         try {
             driver.get(gistBaseURL);
@@ -148,6 +177,20 @@ public class CRUDGistUI {
 
 
             driver.findElement(By.linkText(filename)).click();
+            driver.findElement(By.cssSelector(deleteGistButton)).click();
+            Alert popup = driver.switchTo().alert();
+            popup.accept();
+            return true;
+        } catch (NoSuchElementException ex) {
+            System.out.println("No such gist name");
+            return false;
+        }
+    }
+    
+    public boolean deleteGistByUrl(String url) {
+        String newUrl = gistBaseURL + "/" + url;
+        try {
+            driver.get(newUrl);
             driver.findElement(By.cssSelector(deleteGistButton)).click();
             Alert popup = driver.switchTo().alert();
             popup.accept();
