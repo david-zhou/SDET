@@ -28,7 +28,8 @@ public class GistTesting {
         ReadPropertyFile.loadTokenFile("/Users/davidzhou/GitHub/SDET/GistTesting/tokenfile.properties");
         CRUDGistAPI api = new CRUDGistAPI();
         api.addGistAPI("Descripcion gist api 1", true, "archivo1api.txt", "Codigo \\nSegunda linea");
-        
+        api.addGistAPI("Gist numero 2", true, "archivo 2.txt", "System.out.println(\"test\")");
+        api.editGistAPI(api.getRandomGist(), "nueva descripcion editar", "nuevo nombre archivo", "Nuevo codigo");
     }
     
 }
