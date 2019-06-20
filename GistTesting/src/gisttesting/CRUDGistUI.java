@@ -9,6 +9,7 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -21,8 +22,8 @@ public class CRUDGistUI {
     private WebDriver driver = null;
     private String username;
     private String driverURL, gistBaseURL;
-    private String loginField, passwordField, descriptionField, fileNameField;
-    private String signInButton, addPublicGistButton, addPrivateGistButton;
+    private String loginField, passwordField, descriptionField, fileNameField, newFileNameField;
+    private String signInButton, addPublicGistButton, addPrivateGistButton, userIcon, yourGistsOption, editButton, updateButton;
     
     // loads the fields names from config file
     public CRUDGistUI() {
@@ -38,6 +39,12 @@ public class CRUDGistUI {
         fileNameField = ReadPropertyFile.getProperty("filenamefield");
         addPublicGistButton = ReadPropertyFile.getProperty("addpublicgistbutton");
         addPrivateGistButton = ReadPropertyFile.getProperty("addprivategistbutton");
+        
+        userIcon = ReadPropertyFile.getProperty("usericon");
+        yourGistsOption = ReadPropertyFile.getProperty("yourgists");
+        editButton = ReadPropertyFile.getProperty("editbutton");
+        newFileNameField = ReadPropertyFile.getProperty("newfilename");
+        updateButton = ReadPropertyFile.getProperty("updatebutton");
     }
     
     //logs into github with the username provided and asks for password
@@ -93,5 +100,38 @@ public class CRUDGistUI {
         }
         button.click();
         return true;
+    }
+    
+    public boolean editGistByName(String filename, String newDescription, String newFileName, String newCode) {
+        try {
+            driver.get(gistBaseURL);
+            driver.findElement(By.id(userIcon)).click();
+            driver.findElement(By.className(yourGistsOption)).click();
+
+
+            driver.findElement(By.linkText(filename)).click();
+            driver.findElement(By.cssSelector(editButton)).click();
+            
+            driver.findElement(By.name(descriptionField)).clear();
+            driver.findElement(By.name(descriptionField)).sendKeys(newDescription);
+            driver.findElement(By.cssSelector(newFileNameField)).clear();
+            driver.findElement(By.cssSelector(newFileNameField)).sendKeys(newFileName);
+
+            driver.switchTo().activeElement().sendKeys(Keys.TAB);
+            driver.switchTo().activeElement().sendKeys(Keys.TAB);
+            driver.switchTo().activeElement().sendKeys(Keys.TAB);
+            driver.switchTo().activeElement().sendKeys(Keys.TAB);
+
+            driver.switchTo().activeElement().clear();
+            driver.switchTo().activeElement().sendKeys(newCode);
+            
+            
+            driver.findElement(By.cssSelector(updateButton)).click();
+            
+            return true;
+        } catch (NoSuchElementException ex) {
+            System.out.println("No such gist name");
+            return false;
+        }
     }
 }
