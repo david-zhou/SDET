@@ -7,6 +7,7 @@ package gisttesting;
 
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
@@ -22,8 +23,10 @@ public class CRUDGistUI {
     private WebDriver driver = null;
     private String username;
     private String driverURL, gistBaseURL;
-    private String loginField, passwordField, descriptionField, fileNameField, newFileNameField;
-    private String signInButton, addPublicGistButton, addPrivateGistButton, userIcon, yourGistsOption, editButton, updateButton;
+    private String loginField, passwordField, descriptionField, fileNameField, 
+            newFileNameField;
+    private String signInButton, addPublicGistButton, addPrivateGistButton, userIcon, 
+            yourGistsOption, editButton, updateButton, deleteGistButton;
     
     // loads the fields names from config file
     public CRUDGistUI() {
@@ -45,6 +48,8 @@ public class CRUDGistUI {
         editButton = ReadPropertyFile.getProperty("editbutton");
         newFileNameField = ReadPropertyFile.getProperty("newfilename");
         updateButton = ReadPropertyFile.getProperty("updatebutton");
+        
+        deleteGistButton = ReadPropertyFile.getProperty("deletegistbutton");
     }
     
     //logs into github with the username provided and asks for password
@@ -128,6 +133,24 @@ public class CRUDGistUI {
             
             driver.findElement(By.cssSelector(updateButton)).click();
             
+            return true;
+        } catch (NoSuchElementException ex) {
+            System.out.println("No such gist name");
+            return false;
+        }
+    }
+    
+    public boolean deleteGistByName(String filename) {
+        try {
+            driver.get(gistBaseURL);
+            driver.findElement(By.id(userIcon)).click();
+            driver.findElement(By.className(yourGistsOption)).click();
+
+
+            driver.findElement(By.linkText(filename)).click();
+            driver.findElement(By.cssSelector(deleteGistButton)).click();
+            Alert popup = driver.switchTo().alert();
+            popup.accept();
             return true;
         } catch (NoSuchElementException ex) {
             System.out.println("No such gist name");

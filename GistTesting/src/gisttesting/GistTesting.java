@@ -25,7 +25,10 @@ public class GistTesting {
         CRUDGistUI selenium = new CRUDGistUI();
         selenium.login();
         selenium.addGist("Descripcion gist 1", "Archivo 1 gist", "Nomas una linea", true);
+        selenium.addGist("Description gist 2", "Archivo 2 gist", "Helloworld", true);
         selenium.editGistByName("Archivo 1 gist", "nueva description", "nuevoarchivo.txt", "nuevocodigo");
+        selenium.deleteGistByName("Archivo 2 gist");
+        
     }
     
 }
