@@ -107,6 +107,7 @@ public class CRUDGistUI {
         return true;
     }
     
+    //edits the gist by the name given (if multiple ocurrences, edits the first one)
     public boolean editGistByName(String filename, String newDescription, String newFileName, String newCode) {
         try {
             driver.get(gistBaseURL);
@@ -140,6 +141,7 @@ public class CRUDGistUI {
         }
     }
     
+    //edits the gist by the url given
     public boolean editGistByUrl(String url, String newDescription, String newFileName, String newCode) {
         try {
             String newUrl = gistBaseURL + "/" + url;
@@ -169,6 +171,7 @@ public class CRUDGistUI {
         }
     }
     
+    // deletes the gist by name given (if multiple ocurrences, deletes the first one)
     public boolean deleteGistByName(String filename) {
         try {
             driver.get(gistBaseURL);
@@ -187,6 +190,7 @@ public class CRUDGistUI {
         }
     }
     
+    //deletes the gist by the url given
     public boolean deleteGistByUrl(String url) {
         String newUrl = gistBaseURL + "/" + url;
         try {
