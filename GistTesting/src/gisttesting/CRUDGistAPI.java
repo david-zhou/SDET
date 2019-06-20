@@ -41,6 +41,11 @@ public class CRUDGistAPI {
         return gistIds.get(randomNumber);
     }
     
+    // returns the 
+    public String getGistId(int index) {
+        return gistIds.get(index);
+    }
+    
     // adds a gist with the given values
     public boolean addGistAPI(String description, boolean isPublic, String fileName, String code) throws Exception {
         
@@ -122,6 +127,27 @@ public class CRUDGistAPI {
         JSONObject json = new JSONObject(response.toString());
         String gistid = json.getString("id");
         System.out.println("updated Gist id = " + gistid);
+        return true;
+    }
+    
+    // deletes a gist with the given id
+    public boolean deleteGistAPI(String gistId) throws Exception {
+        String url = gistAPIBaseURL + "/" +gistId;
+        
+        URL obj = new URL(url);
+        HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+        con.setRequestMethod("DELETE");
+ 
+        con.setRequestProperty("Authorization", "token " + token);
+
+        int responseCode = con.getResponseCode();
+        if (responseCode != 204) {
+            return false;
+        }
+        System.out.println("\nSending 'DELETE' request to URL : " + url);
+        System.out.println("Response Code : " + responseCode);
+
+        System.out.println("deleted gist id = " + gistId);
         return true;
     }
 }
